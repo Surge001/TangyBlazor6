@@ -72,14 +72,21 @@
                 </div>
                 <div class="form-group py-2">
                     <button class="btn btn-primary">@Title</button>
-                    <NavLink href="category" class="btn btn-secondary">Back to Index</NavLink>
-                </div> 
+                    <NavLink href="products" class="btn btn-secondary">Back to Index</NavLink>
+                </div>
             </EditForm>
         }
     </div>
+
+    <div class="col-md-2">
+        <img src="@Product.ImageUrl" class="w-100" />
+    </div>
 </div>
 @code {
-    private ProductDto Product { get; set; } = new();
+    private ProductDto Product { get; set; } = new()
+        {
+            ImageUrl = "/images/product/default.png"
+        };
     public string Title { get; set; } = "Create";
 
     private IEnumerable<CategoryDto> categories;
@@ -89,6 +96,8 @@
 
 
     private bool IsLoading;
+
+    public string OldImgUrl { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -113,7 +122,12 @@
     {
         IsLoading = true;
         StateHasChanged();
-        this.Product = await productRepository.Get(Id);
+        if (Id != 0)
+        {
+            Title = "Update";
+            this.Product = await productRepository.Get(Id);
+            OldImgUrl = Product.ImageUrl;
+        }
         this.IsLoading = false;
         StateHasChanged();
     }
@@ -132,10 +146,15 @@
         if (this.Product.Id == 0)
         {
             await productRepository.Create(Product);
+            await this.jsRuntime.InvokeVoidAsync("showToastr", "success", "Successfully created product");
         }
         else
         {
+            if(OldImgUrl != Product.ImageUrl){
+                this.fileService.DeleteFile(OldImgUrl);
+            }
             await productRepository.Update(Product);
+            await this.jsRuntime.InvokeVoidAsync("showToastr", "success", "Successfully updated product");
         }
         this.navigationManager.NavigateTo("Products");
     }

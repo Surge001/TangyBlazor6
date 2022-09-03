@@ -77,7 +77,7 @@ namespace Tangy.Business.Repository
                 //products.Category = objDto.Category;
                 products.CategoryId = objDto.CategoryId;
                 products.Description = objDto.Description;
-                products.ImageUrl = products.ImageUrl;
+                products.ImageUrl = objDto.ImageUrl;
                 this.dbContext.Update(products);
                 await this.dbContext.SaveChangesAsync();
                 return this.mapper.Map<Product, ProductDto>(products);

@@ -12,3 +12,5 @@ network account:
 surge001@hotmail.com
 SyncfusionDotnet*6
 
+Documentation for components implementation:
+https://blazor.syncfusion.com/documentation/getting-started/blazor-server-side-visual-studio

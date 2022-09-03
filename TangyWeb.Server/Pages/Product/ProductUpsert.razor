@@ -28,7 +28,7 @@
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <InputText @bind-Value="Product.Description" class="form-control"></InputText>
+                    <SfRichTextEditor @bind-Value="Product.Description"></SfRichTextEditor>
                     <ValidationMessage For="()=>Product.Description"></ValidationMessage>
                 </div>
                 <div class="form-group">
@@ -70,6 +70,7 @@
                 <div class="form-group py-2">
                     <InputFile OnChange="HandleImageUpload"></InputFile>
                 </div>
+
                 <div class="form-group py-2">
                     <button class="btn btn-primary">@Title</button>
                     <NavLink href="products" class="btn btn-secondary">Back to Index</NavLink>

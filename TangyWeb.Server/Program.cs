@@ -7,12 +7,16 @@ using Tangy.DataAccess.Data;
 using TangyWeb.Server.Data;
 using TangyWeb.Server.Service;
 using TangyWeb.Server.Service.IService;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddSyncfusionBlazor(options => { });
+
+
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

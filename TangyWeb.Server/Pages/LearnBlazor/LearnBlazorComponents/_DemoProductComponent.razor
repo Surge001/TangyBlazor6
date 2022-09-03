@@ -1,4 +1,6 @@
-﻿<div class="col-5 border p-2 bg-light" @onclick="(args) => LastSelectedProduct(args, DemoProductItem.Name)">
+﻿@using MS = Microsoft.AspNetCore.Components
+
+<div class="col-5 border p-2 bg-light" @onclick="(args) => LastSelectedProduct(args, DemoProductItem.Name)">
     <h4 class="text-secondary">Product - @DemoProductItem.Id</h4>
     <h4 class="text-secondary">Name - @DemoProductItem.Name</h4>
 
@@ -28,7 +30,7 @@
     [Parameter]
     public EventCallback<string> OnLastSelectedProductChange { get; set; }
 
-    private async Task FavoriteUpdated(ChangeEventArgs e)
+    private async Task FavoriteUpdated(MS.ChangeEventArgs e)
     {
         await this.OnEventUpdated.InvokeAsync((bool)e.Value);
     }

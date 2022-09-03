@@ -1,0 +1,15 @@
+﻿<h3>_AnotherChildComponent</h3>
+
+<input id="placeholder" required="@this.Required" maxLength="@this.MaxLength" placeholder="@this.Placeholder" />
+
+@code {
+
+    [Parameter]
+    public string Placeholder { get; set; }
+
+    [Parameter]
+    public string Required { get; set; }
+
+    [Parameter]
+    public string MaxLength { get; set; }
+}

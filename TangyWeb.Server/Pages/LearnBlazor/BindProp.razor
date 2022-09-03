@@ -1,0 +1,140 @@
+﻿@page "/LearnBlazor/BindProp"
+<div class="row">
+
+    <div class="text-success">Individual Product:</div>
+    <div class="col-6 border p-4">
+        <h3>Product Playground:</h3><hr />
+        <p>
+            <input type="checkbox" @bind="product.IsActive" @bind:event="onchange" />
+
+            This product is @(product.IsActive ? "Active" : "Not Active")
+        </p>
+        @if (!string.IsNullOrWhiteSpace(selectedProperty))
+        {
+            <p>Selected Property: @selectedProperty</p>
+        }
+
+        <div>
+            <select @bind="selectedProperty">
+                @foreach (DemoProductProperties prop in product.Properties)
+                {
+                    <option value="@prop.Key">@prop.Value </option>
+                }
+            </select>
+        </div>
+
+    </div>
+
+    <div class="col-6 border p-4">
+        <h3>Product</h3> <hr />
+        <p>@product.Name</p>
+        <p>@product.Price</p>
+        <p>@product.IsActive</p>
+        <input type="number" @bind-value="@product.Price" @bind-value:event="oninput" />
+
+    </div>
+</div>
+
+<hr />
+
+<h3 class="text-success">Product Table:</h3>
+@foreach (DemoProductItem product in products)
+{
+    <div class="row border p-3">
+        <div class="col-4">
+            @product.Name
+        </div>
+        <div class="col-4">
+            <input type="text" @bind="product.Price" @bind:event="oninput" />
+        </div>
+        <div class="col-4">
+            <input type="checkbox" @bind="product.IsActive" @onclick="@(e => CheckChanged(e, product))" @bind:event="onchange" />
+        </div>
+    </div>
+}
+<div class="row border p-4">
+    <p class="text-success"> Better Product Summary:</p>
+    @if (selectedProduct != null)
+    {
+        <p>@mouseEventY</p>
+        <p>@selectedProduct.Name</p>
+        <p>@selectedProduct.Price</p>
+        <p>@selectedProduct.IsActive</p>
+    }
+</div>
+
+<div class="row border p-4">
+    <p class="text-success">Product Summary:</p>
+    @foreach (DemoProductItem product in products)
+    {
+        <div class="row border p-3">
+            <div class="col-4">
+                @product.Name
+            </div>
+            <div class="col-4">
+                @product.Price
+            </div>
+            <div class="col-4">
+                @product.IsActive
+            </div>
+        </div>
+    }
+</div>
+@code {
+    string selectedProperty = string.Empty;
+    double mouseEventY = 0;
+    DemoProductItem? selectedProduct;
+    private void CheckChanged(MouseEventArgs e, DemoProductItem obj)
+    {
+        selectedProduct = obj;
+        mouseEventY = e.ClientY;
+    }
+
+    DemoProductItem product = new DemoProductItem()
+        {
+            Id = 1,
+            Name = "Name",
+            IsActive = true,
+            Price = 10.99m,
+            Properties = new List<DemoProductProperties>(){
+            new DemoProductProperties() { Id =1, Key="Color", Value = "Black"},
+            new DemoProductProperties(){ Id=2, Key="Flavor", Value = "Rose Jasmine"},
+            new DemoProductProperties(){ Id = 3, Key="Size", Value = "20oz"}
+        }
+        };
+
+    List<DemoProductItem> products = new();
+    protected override void OnInitialized()
+    {
+
+        products.Add(new()
+            {
+                Id = 1,
+                Name = "Midnight Blaze",
+                IsActive = false,
+                Price = 10.99m,
+                Properties = new()
+    {
+    new DemoProductProperties { Id = 1, Key = "Flavor", Value = "Rose"},
+         new DemoProductProperties { Id = 2, Key = "Size", Value = "20oz"},
+        new DemoProductProperties { Id = 3, Key = "Color", Value = "Purple" }
+    }
+            });
+
+        products.Add(new()
+            {
+                Id = 2,
+                Name = "Blossom Lily",
+                IsActive = true,
+                Price = 12.99m,
+                Properties = new()
+            {
+                new DemoProductProperties { Id = 1, Key = "Flavor", Value = "Lily" },
+                new DemoProductProperties { Id = 2, Key = "Size", Value = "18oz" },
+                new DemoProductProperties {Id = 3,Key = "Color",Value = "White"}
+            }
+            });
+
+        base.OnInitialized();
+    }
+}

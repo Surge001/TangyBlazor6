@@ -1,0 +1,23 @@
+﻿<div>
+    <div class="alert alert-info">@Title</div>
+    @if (this.ChildContent != null)
+    {
+        <div class="alert alert-success">@ChildContent</div>
+    }
+    @if (DangerChildContent != null)
+    {
+        <div class="alert alert-danger">
+            @DangerChildContent
+        </div>
+    }
+</div>
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment DangerChildContent { get; set; }
+}

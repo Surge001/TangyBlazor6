@@ -1,0 +1,71 @@
+﻿@page "/LearnBlazor/DemoProduct"
+
+<h3 class="text-primary">DemoProduct</h3>
+<p>Favorites Total: @selectedFavoriteCount</p>
+<p>Last Selected Product: @this.lastSelectedProduct</p>
+<div class="border p-2 mt-2" style="background-color:azure">
+    <div class="row p-2">
+        @foreach (DemoProductItem product in products)
+        {
+            <_DemoProductComponent DemoProductItem="@product" OnEventUpdated="IncrementSelectedFavoriteCount"
+                OnLastSelectedProductChange="LastSelectedProductChanged">
+
+            </_DemoProductComponent>
+        }
+    </div>
+</div>
+@code {
+    public int selectedFavoriteCount = 0;
+    public string lastSelectedProduct { get; set; }
+
+    /// <summary>
+    /// Assigns <see cref="lastSelectedProduct" passed in value
+    /// </summary>
+    private void LastSelectedProductChanged(string productName)
+    {
+        this.lastSelectedProduct = productName;
+    }
+
+
+    public void IncrementSelectedFavoriteCount(bool IsSelected)
+    {
+        if (IsSelected)
+            this.selectedFavoriteCount++;
+        else
+            this.selectedFavoriteCount--;
+    }
+    List<DemoProductItem> products = new();
+    protected override void OnInitialized()
+    {
+
+        products.Add(new()
+            {
+                Id = 1,
+                Name = "Midnight Blaze",
+                IsActive = false,
+                Price = 10.99m,
+                Properties = new()
+    {
+    new DemoProductProperties { Id = 1, Key = "Flavor", Value = "Rose"},
+         new DemoProductProperties { Id = 2, Key = "Size", Value = "20oz"},
+        new DemoProductProperties { Id = 3, Key = "Color", Value = "Purple" }
+    }
+            });
+
+        products.Add(new()
+            {
+                Id = 2,
+                Name = "Blossom Lily",
+                IsActive = true,
+                Price = 12.99m,
+                Properties = new()
+            {
+                new DemoProductProperties { Id = 1, Key = "Flavor", Value = "Lily" },
+                new DemoProductProperties { Id = 2, Key = "Size", Value = "18oz" },
+                new DemoProductProperties {Id = 3,Key = "Color",Value = "White"}
+            }
+            });
+
+        base.OnInitialized();
+    }
+}

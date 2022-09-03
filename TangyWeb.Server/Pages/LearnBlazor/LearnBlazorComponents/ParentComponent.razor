@@ -1,0 +1,13 @@
+﻿@page "/LearnBlazor/parentComponent"
+
+<h3>Parent Child Relation</h3>
+
+<_ChildComponent Title="This title is passed from parent component">
+    <ChildContent>Render content from the parent</ChildContent>
+    <DangerChildContent>Danger content from parent</DangerChildContent>
+</_ChildComponent>
+
+<_AnotherChildComponent Required="true" MaxLength="5" Placeholder="ParentPlaceholder"></_AnotherChildComponent>
+@code {
+
+}

@@ -31,5 +31,7 @@ namespace Tangy.Models.Dto
 
         public CategoryDto Category { get; set; }
 
+        public ICollection<ProductPriceDto> ProductPrices { get; set; }
+
     }
 }

@@ -14,3 +14,9 @@ SyncfusionDotnet*6
 
 Documentation for components implementation:
 https://blazor.syncfusion.com/documentation/getting-started/blazor-server-side-visual-studio
+
+Documentation datagrid overview:
+https://blazor.syncfusion.com/demos/datagrid/overview?theme=bootstrap4&_gl=1*68cu6k*_ga*NTU0NDIyODA1LjE2NjIyMzA5ODc.*_ga_WC4JKKPHH0*MTY2MjI0NjE3OC4zLjEuMTY2MjI0NjIyMy4wLjAuMA..&_ga=2.189500907.1183072559.1662230987-554422805.1662230987
+
+Datagrid getting started:
+https://blazor.syncfusion.com/documentation/datagrid/getting-started

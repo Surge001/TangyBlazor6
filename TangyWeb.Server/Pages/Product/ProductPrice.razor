@@ -2,6 +2,8 @@
 @inject IProductRepository productRepo
 @inject IProductPriceRepository productPriceRepo
 
+@using Grid = Syncfusion.Blazor.Grids
+
 <h3 class="card-text text-primary mb-3 ml-3">Product Price Management</h3>
 
 
@@ -28,7 +30,54 @@
         </div>
     }
 </div>
+
+
+<SfGrid @ref="productPriceGrid" DataSource="@ProductPrices" AllowPaging="true" 
+    Toolbar="@(new List<string>(){"Add", "Edit", "Delete", "Update", "Cancel"})"
+        AllowFiltering="true" AllowSorting="true">
+    <GridEditSettings AllowEditing="true" AllowAdding="true" ShowDeleteConfirmDialog="true" AllowDeleting="true"></GridEditSettings>
+    <GridEvents OnActionBegin="ActionHandler" TValue="ProductPriceDto"></GridEvents>
+    <GridPageSettings PageSize="5"  PageSizes="true" PageCount="5"></GridPageSettings>
+    <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+    <GridSortSettings AllowUnsort="false">
+        <GridSortColumns>
+            <GridSortColumn Field="Price" Direction="SortDirection.Ascending"></GridSortColumn>
+        </GridSortColumns>
+    </GridSortSettings>
+    <GridColumns>
+        <GridColumn IsPrimaryKey="true" AllowAdding="false" Field=@nameof(ProductPriceDto.Id) HeaderText="ID" TextAlign="TextAlign.Right" Width="40"></GridColumn>
+        <GridColumn Field=@nameof(ProductPriceDto.Price) HeaderText="Price" Format="C2" Type="ColumnType.Number" TextAlign="TextAlign.Right"></GridColumn>
+        <GridColumn Field=@nameof(ProductPriceDto.Size) HeaderText="Size">
+            <EditTemplate>
+                <Syncfusion.Blazor.DropDowns.SfDropDownList DataSource="@SizeList" TValue="string" TItem="string"
+                @bind-Value="@((context as ProductPriceDto).Size)">
+
+                </Syncfusion.Blazor.DropDowns.SfDropDownList>
+            </EditTemplate>
+
+        </GridColumn>
+
+        <GridColumn HeaderText="Manage Records" Width="150">
+            <GridCommandColumns>
+                <GridCommandColumn Type="CommandButtonType.Edit" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-edit", CssClass = "e-flat" })"></GridCommandColumn>
+                <GridCommandColumn Type="CommandButtonType.Delete" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-delete", CssClass = "e-flat" })"></GridCommandColumn>
+                <GridCommandColumn Type="CommandButtonType.Save" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-update", CssClass = "e-flat" })"></GridCommandColumn>
+                <GridCommandColumn Type="CommandButtonType.Cancel" ButtonOption="@(new CommandButtonOptions() { IconCss = "e-icons e-cancel-icon", CssClass = "e-flat" })"></GridCommandColumn>
+            </GridCommandColumns>
+         </GridColumn>
+
+    </GridColumns>
+</SfGrid>
 @code {
+    #region Grid
+
+    private SfGrid<ProductPriceDto> productPriceGrid;
+
+    private IEnumerable<string> SizeList { get; set; } = new List<string>()
+    {
+        "Small", "Medium", "Large", "8Oz", "16Oz", "18Oz"
+    };
+    #endregion
 
     [Parameter]
     public int Id { get; set; }
@@ -48,6 +97,29 @@
             this.ProductPrices = await productPriceRepo.GetAll(this.Id);
             IsLoading = false;
             StateHasChanged();
+        }
+    }
+
+    private async Task ActionHandler(ActionEventArgs<ProductPriceDto> e)
+    {
+        if(e.RequestType.Equals(Grid.Action.Save)){
+            e.Data.ProductId = this.Id;
+            if(e.Action == "Add"){
+                // Adding new
+                await this.productPriceRepo.Create(e.Data);
+                ProductPrices = await this.productPriceRepo.GetAll(this.Id);
+                this.productPriceGrid.Refresh();
+            }
+            else if(e.Action == "Edit"){
+                // Editing
+                await this.productPriceRepo.Update(e.Data);
+                this.productPriceGrid.Refresh();
+            }
+        }
+
+        if (e.RequestType.Equals(Grid.Action.Delete)){
+            await this.productPriceRepo.Delete(e.Data.Id);
+            this.productPriceGrid.Refresh();
         }
     }
 }

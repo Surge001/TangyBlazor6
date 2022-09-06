@@ -1,0 +1,141 @@
+﻿@page "/details/{ProductId:int}"
+@using TangyWebClient.ViewModels
+
+@inject IProductService productService
+@inject ICartService cartService
+@inject NavigationManager navManager
+@inject IJSRuntime jsRuntime
+
+
+@if (IsProcessing)
+{
+    <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
+        <img src="images/ajax-loader.gif" />
+    </div>
+}
+else
+{
+    <EditForm OnValidSubmit="AddToCart" Model="DetailsVm" method="post">
+        <DataAnnotationsValidator />
+        <div class="card container mt-4">
+            <div class="card-header ml-0  row">
+                <div class="col-12 col-md-6">
+                    <h1 class="text-primary">@Product.Name</h1>
+                </div>
+
+                <div class="col-12 col-md-6 text-end pt-4">
+                    <span class="badge bg-info pt-2" style="height:30px;">@Product.Category.Name</span>
+                    <span class="badge bg-warning pt-2" style="height:30px;">@Product.Color</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="container rounded p-2">
+                    <div class="row">
+                        <div class="col-10">
+                            <p>@((MarkupString)Product.Description)</p>
+                            <div class="row">
+                                @foreach (var productPrice in Product.ProductPrices)
+                                {
+                                    if (productPrice.Id == DetailsVm.SelectedProductPriceId)
+                                    {
+                                        // this product is selected;
+                                        <div class="col-2 bg-light text-center pt-2 m-2" style="border:3px solid #28A745; border-radius:10px;box-shadow:5px">
+                                            <p>@productPrice.Size</p>
+                                            <p>@productPrice.Price.ToString("C")</p>
+                                        </div>
+                                    }
+                                    {
+                                        // all other products
+
+                                        <div class="col-2 bg-light text-center pt-2 m-2" style="border:3px solid; border-radius:10px;box-shadow:5px"
+                                 @onclick="(args)=>SelectedProductPrice(args, productPrice.Id)">
+                                            <p>@productPrice.Size</p>
+                                            <p>@productPrice.Price.ToString("C")</p>
+                                        </div>
+                                    }
+                                }
+                                @if (!Product.ProductPrices.Any())
+                                {
+                                    <p class="text-warning">No size available yet!</p>
+                                }
+                                else
+                                {
+                                    <div class="row pl-2">
+                                        <div class="col-2 text-primary"><h4>Count</h4></div>
+                                        <div class="col-10">
+                                            <InputNumber @bind-Value="DetailsVm.Count" class="form-control" />
+
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <img src="@Product.ImageUrl" width="100%" class="rounded" />
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-12 col-md-6 pb-1">
+                            <a class="btn btn-success form-control " href="/">Back to Home</a>
+                        </div>
+                        <div class="col-12 col-md-6 pb-1">
+                            @if (DetailsVm.SelectedProductPriceId > 0)
+                            {
+                            // item has been selected
+                                <button type="submit" value="Add to Cart" class="btn btn-primary form-control">Add to Cart</button>
+                            }
+                            else{
+                                <button type="submit" disabled value="Add to Cart" class="btn btn-primary form-control">Add to Cart</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+
+}
+@code {
+
+    [Parameter]
+    public int ProductId { get; set; }
+
+    public ProductDto Product { get; set; } = new();
+
+    public bool IsProcessing { get; set; } = false;
+
+    public int SelectedProductPriceId { get; set; }
+
+    private DetailsVM DetailsVm { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsProcessing = true;
+
+        Product = await this.productService.Get(this.ProductId);
+
+        IsProcessing = false;
+    }
+    private async Task SelectedProductPrice(MouseEventArgs e, int productPriceId)
+    {
+        DetailsVm.ProductPrice = Product.ProductPrices.FirstOrDefault(i => i.Id == productPriceId);
+        DetailsVm.SelectedProductPriceId = productPriceId;
+    }
+
+    private async Task AddToCart(){
+        ShoppingCart shoppingCart = new()
+        {
+            Count = DetailsVm.Count,
+            ProductId = this.ProductId,
+            ProductPriceId = DetailsVm.SelectedProductPriceId
+        };
+        await this.cartService.IncrementCart(shoppingCart);
+        navManager.NavigateTo("/");
+        await jsRuntime.InvokeVoidAsync("showToastr", "success", "Product added to cart successfully");
+
+    }
+}

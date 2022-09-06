@@ -19,7 +19,7 @@ namespace TangyWebClient.Service
 
         public async Task<ProductDto> Get(int id)
         {
-            var response = await this.client.GetAsync($"/api/product/{id}");
+            var response = await this.client.GetAsync($"/api/product/productId?productId={id}");
 
             var content = await response.Content.ReadAsStringAsync();
             if (response.IsSuccessStatusCode)

@@ -33,7 +33,7 @@ namespace TangyApi.Controllers
             return Ok(await this.orderRepository.GetAll());
         }
 
-        [HttpGet("productId")]
+        [HttpGet("orderHeaderId")]
         public async Task<IActionResult> Get(int? orderHeaderId)
         {
             if (orderHeaderId == null || orderHeaderId <= 0)
@@ -50,7 +50,7 @@ namespace TangyApi.Controllers
             {
                 return BadRequest(new ErrorModelDto()
                 {
-                    ErrorMessage = $"Order is not found by order Header Id {orderHeader.Value}",
+                    ErrorMessage = $"Order is not found by order Header Id {orderHeaderId.Value}",
                     StatusCode = StatusCodes.Status404NotFound
                 });
             }

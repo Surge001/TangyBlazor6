@@ -14,7 +14,6 @@ namespace Tangy.Models.Dto
         [Required]
         public int ProductId { get; set; }
 
-
         [Required]
         public string Size { get; set; }
 

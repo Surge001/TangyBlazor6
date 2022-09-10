@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Tangy.Models.Dto;
 
 namespace Tangy.DataAccess
 {
@@ -15,7 +16,7 @@ namespace Tangy.DataAccess
 
         [ForeignKey("ProductId")]
         [NotMapped]
-        public virtual Product Product { get; set; }
+        public virtual ProductDto Product { get; set; }
 
         [Required]
         public int Count { get; set; }

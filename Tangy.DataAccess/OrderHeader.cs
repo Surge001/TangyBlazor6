@@ -17,15 +17,12 @@ namespace Tangy.DataAccess
         public int UserId { get; set; }
 
         [Required]
-        [Display(Name = "Order Total")]
         public double OrderTotal { get; set; }
 
         [Required]
-        [Display(Name = "Order Date")]
         public DateTime OrderDate { get; set; }
 
         [Required]
-        [Display(Name = "Shipping Date")]
         public DateTime ShippingDate { get; set; }
 
         [Required]
@@ -40,24 +37,22 @@ namespace Tangy.DataAccess
         public string Name { get; set; }
 
         [Required]
-        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
 
         [Required]
-        [Display(Name = "Street Address")]
         public string StreetAddress { get; set; }
 
         [Required]
-        [Display(Name = "City")]
         public string City { get; set; }
 
         [Required]
-        [Display(Name = "State")]
         public string State { get; set; }
 
         [Required]
-        [Display(Name = "PostalCode")]
         public string PostalCode { get; set; }
+
+        [Required]
+        public string Email { get; set; }
     }
 }

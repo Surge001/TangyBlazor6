@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Areas\Identity\Pages\Account\Logout.cshtml.cs.bkup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Areas\Identity\Pages\Account\Logout.cshtml.cs.bkup" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.8" />

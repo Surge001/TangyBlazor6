@@ -26,5 +26,7 @@ namespace Tangy.DataAccess.Data
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
     }
 }

@@ -1,5 +1,25 @@
 ﻿@page
-@model LogoutModel
+
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+
+    @functions{
+
+        public async Task<IActionResult> OnGet(){
+            if(this.signInManager.IsSignedIn(User)){
+                await this.signInManager.SignOutAsync();
+            }
+            return Redirect("~/");
+        }
+
+    }
+
+
+
+
+
+
+@*@model LogoutModel
 @{
     ViewData["Title"] = "Log out";
 }
@@ -19,3 +39,4 @@
         }
     }
 </header>
+*@

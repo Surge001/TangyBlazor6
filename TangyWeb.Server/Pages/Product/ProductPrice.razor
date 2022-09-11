@@ -1,6 +1,7 @@
 ﻿@page "/Product/Price/{Id:int}"
 @inject IProductRepository productRepo
 @inject IProductPriceRepository productPriceRepo
+@attribute [Authorize]
 
 @using Grid = Syncfusion.Blazor.Grids
 

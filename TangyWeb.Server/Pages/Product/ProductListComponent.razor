@@ -2,6 +2,8 @@
 @inject IProductRepository productRepository
 @inject IJSRuntime JsRuntime;
 @inject IFileService fileService
+@inject NavigationManager navManager
+@*@attribute [Authorize]*@
 
 <_DeleteConfirmationComponent ConfirmationChanged="ConfirmDelete_Click" IsParentComponentProcessing="IsLoading"></_DeleteConfirmationComponent>
 <div class="row mt-4">
@@ -58,9 +60,18 @@ else
     private bool IsLoading = false;
     public int DeleteProductId { get; set; }
 
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationState;
+        if (!authState.User.Identity.IsAuthenticated)
+        {
+
+            var uri = new Uri(this.navManager.Uri);
+            this.navManager.NavigateTo($"/identity/account/login?returnUrl={uri.LocalPath}", forceLoad: true);
+        }
         this.IsLoading = true;
         await Task.Run(LoadProducts);
 
@@ -86,7 +97,7 @@ else
         if (isConfirmed && this.DeleteProductId != 0)
         {
             ProductDto prod = await productRepository.Get(DeleteProductId);
-            if(!prod.ImageUrl.Contains("default.png"))
+            if (!prod.ImageUrl.Contains("default.png"))
             {
                 this.fileService.DeleteFile(prod.ImageUrl);
             }

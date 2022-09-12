@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Tangy.Common
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">TangyWeb.Server</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -44,21 +45,24 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Blazor JS
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Category">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Category
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Products">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
+        <AuthorizeView Roles="@adminRole">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/Category">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Category
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/Products">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Products
+                </NavLink>
+            </div>
+        </AuthorizeView>
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
+    private string adminRole = SD.Role_Admin;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 

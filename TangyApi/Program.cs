@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Tangy.Business.Repository.IRepository;
 using Tangy.Business.Repository;
 using Tangy.DataAccess.Data;
+using Microsoft.AspNetCore.Identity;
+using Tangy.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,11 @@ builder.Services.AddCors(o => o.AddPolicy("Tangy", builder =>
 }));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 

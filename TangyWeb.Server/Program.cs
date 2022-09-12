@@ -9,6 +9,8 @@ using TangyWeb.Server.Service;
 using TangyWeb.Server.Service.IService;
 using Syncfusion.Blazor;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,12 +26,13 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>()
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders().AddDefaultUI()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
 
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 builder.Services.AddScoped<IFileService, FileService>();
 
@@ -55,8 +58,24 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+SeedDatabase(); //< -- Creates admin system account for application administration.
+
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-app.UseAuthentication();;
+app.UseAuthentication(); ;
 app.UseAuthorization();
 app.Run();
+
+
+/// <summary>
+/// Executes database seeding logic which happens in check whether there is admin account
+/// already created or not, and if not, it creates one automatically.
+/// </summary>
+void SeedDatabase()
+{
+    using (IServiceScope scope = app.Services.CreateScope())
+    {
+        IDbInitializer dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}

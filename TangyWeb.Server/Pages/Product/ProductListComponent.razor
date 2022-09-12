@@ -1,4 +1,5 @@
 ﻿@page "/Products"
+@using Tangy.Common
 @inject IProductRepository productRepository
 @inject IJSRuntime JsRuntime;
 @inject IFileService fileService
@@ -71,6 +72,11 @@ else
 
             var uri = new Uri(this.navManager.Uri);
             this.navManager.NavigateTo($"/identity/account/login?returnUrl={uri.LocalPath}", forceLoad: true);
+        }
+        else{
+            if(!authState.User.IsInRole(SD.Role_Admin)){
+                this.navManager.NavigateTo("/ErrorPage");
+            }
         }
         this.IsLoading = true;
         await Task.Run(LoadProducts);

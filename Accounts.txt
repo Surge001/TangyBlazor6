@@ -1,0 +1,10 @@
+
+Tangy Customer account:
+
+  "name": "apiuser@tangy.com",
+  "email": "apiuser@tangy.com",
+  "phoneNumber": "1234",
+  "password": "Admin*123",
+  "confirmPassword": "Admin*123"
+  
+  

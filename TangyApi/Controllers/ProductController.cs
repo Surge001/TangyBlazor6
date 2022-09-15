@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tangy.Business.Repository.IRepository;
+using Tangy.Common;
 using Tangy.Models.Dto;
 
 namespace TangyApi.Controllers
@@ -28,6 +30,7 @@ namespace TangyApi.Controllers
         #endregion
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes ="Bearer", Roles = SD.Role_Customer)]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await this.productRepository.GetAll());

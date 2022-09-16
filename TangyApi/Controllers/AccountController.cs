@@ -34,7 +34,7 @@ namespace TangyApi.Controllers
             this.apiSettings = apiSettings.Value;
         }
 
-        [HttpPost]
+        [HttpPost(Name ="register")]
         public async Task<IActionResult> SignUp([FromBody] SignupRequestDto request)
         {
             if (request == null || !ModelState.IsValid)

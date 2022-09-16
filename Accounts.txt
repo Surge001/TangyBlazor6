@@ -8,3 +8,6 @@ Tangy Customer account:
   "confirmPassword": "Admin*123"
   
   
+  
+  name: one@one.com
+  password: TangyOne@1

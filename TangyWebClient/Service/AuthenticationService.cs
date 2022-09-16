@@ -49,14 +49,31 @@ namespace TangyWebClient.Service
 
         }
 
-        public Task Logout()
+        public async Task Logout()
         {
-            throw new NotImplementedException();
+            await this.localStore.RemoveItemAsync(SD.Local_Token);
+            await this.localStore.RemoveItemAsync(SD.Local_UserDetails);
+            this.httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
-        public Task<SignupResponseDto> RegisterUser(SignupRequestDto request)
+        public async Task<SignupResponseDto> RegisterUser(SignupRequestDto request)
         {
-            throw new NotImplementedException();
+            string content = JsonConvert.SerializeObject(request);
+            StringContent bodyContent = new StringContent(content, Encoding.UTF8, "application/json");
+            using (HttpResponseMessage response = await this.httpClient.PostAsync("api/account/SignUp", bodyContent))
+            {
+                var contentTemp = await response.Content.ReadAsStringAsync();
+                var responseDto = JsonConvert.DeserializeObject<SignupResponseDto>(contentTemp);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return new SignupResponseDto() { IsRegistrationSuccessful = true };
+                }
+                else
+                {
+                    return new SignupResponseDto() { IsRegistrationSuccessful = false, Errors = responseDto?.Errors };
+                }
+            }
         }
     }
 }

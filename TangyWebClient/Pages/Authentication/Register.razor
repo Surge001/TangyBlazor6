@@ -1,7 +1,5 @@
 ﻿@page "/register"
 @using Tangy.Models
-@inject IAuthenticationService authService
-@inject NavigationManager navManager
 
 
 <EditForm Model="SignupRequestDto" OnValidSubmit="RegisterUser" class="pt-4">
@@ -58,35 +56,3 @@
         </div>
     </div>
 </EditForm>
-
-
-
-
-@code {
-    private SignupRequestDto SignupRequestDto { get; set; } = new();
-    private bool IsProcessing { get; set; } = false;
-    public bool ShowRegistrationErrors { get; set; }
-    private IEnumerable<string> Errors { get; set; }
-
-
-    private async Task RegisterUser()
-    {
-        this.ShowRegistrationErrors = false;
-        this.IsProcessing = true;
-
-        var result = await this.authService.RegisterUser(this.SignupRequestDto);
-
-        if (result.IsRegistrationSuccessful)
-        {
-            this.navManager.NavigateTo("/login");
-        }
-        else
-        {
-            // registration failed
-            this.Errors = result.Errors;
-            this.ShowRegistrationErrors = true;
-        }
-        this.IsProcessing = true;
-    }
-
-}

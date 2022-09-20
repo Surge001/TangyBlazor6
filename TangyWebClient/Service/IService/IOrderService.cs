@@ -7,5 +7,7 @@ namespace TangyWebClient.Service.IService
         public Task<IEnumerable<OrderDto>> GetAll(string? userId);
 
         public Task<OrderDto> Get(int orderHeaderId);
+
+        public Task<OrderDto> Create(StripePaymentDto paymentDto);
     }
 }

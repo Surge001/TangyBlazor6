@@ -103,6 +103,7 @@ namespace TangyApi.Controllers
 
                 var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
+                int userId = 0;
                 return Ok(new SignInResponseDto()
                 {
                     IsAuthSuccessful = true,

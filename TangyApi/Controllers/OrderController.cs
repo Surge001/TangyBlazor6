@@ -57,5 +57,13 @@ namespace TangyApi.Controllers
 
             return Ok(orderHeader);
         }
+
+        [HttpPost]
+        [ActionName("Create")]
+        public async Task<IActionResult> Create([FromBody] StripePaymentDto payment)
+        {
+            var result = this.orderRepository.Create(payment.Order);
+            return Ok(result);
+        }
     }
 }

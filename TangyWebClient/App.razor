@@ -1,4 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using TangyWebClient.Pages.Authentication
+
+
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
@@ -7,7 +10,7 @@
                     <p>We are authorizing the user</p>
                 </Authorizing>
                 <NotAuthorized>
-                    <p>Not Authorized</p>
+                    <RedirectToLogin></RedirectToLogin>
                 </NotAuthorized>
             </AuthorizeRouteView>
             @*<RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />*@

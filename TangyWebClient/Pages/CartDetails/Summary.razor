@@ -1,11 +1,14 @@
 ﻿@page "/summary"
+@using Microsoft.AspNetCore.Authorization
 @using Tangy.Common
 @using Tangy.DataAccess
+@using Tangy.Models
 @inject ILocalStorageService localStorage
 @inject ICartService cartService
+@inject IOrderService orderService
 @inject IProductService productService
 @inject IJSRuntime jsRuntime
-
+@attribute [Authorize]
 
 @if (IsProcessing)
 {
@@ -111,8 +114,21 @@ else
     private OrderDto Order { get; set; } = null;
     private IEnumerable<ProductDto> Products { get; set; }
 
-    private async Task HandleCheckout(){
+    private async Task HandleCheckout()
+    {
+        try
+        {
+            var paymentDto = new StripePaymentDto()
+                {
+                    Order = this.Order
+                };
 
+            var orderHeaderSaved = this.orderService.Create(paymentDto);
+        }
+        catch (Exception err)
+        {
+           await this.jsRuntime.InvokeVoidAsync("showToastr", "error", err.Message);
+        }
     }
     protected override async Task OnInitializedAsync()
     {
@@ -146,6 +162,15 @@ else
                 };
             Order.OrderDetails.Add(orderDetailDto);
             Order.OrderHeader.OrderTotal += (cart.Count * productPrice.Price);
+        }
+
+        UserDto userDto = await this.localStorage.GetItemAsync<UserDto>(SD.Local_UserDetails);
+        if (userDto != null)
+        {
+            this.Order.OrderHeader.UserId = userDto.Id;
+            this.Order.OrderHeader.Email = userDto.Email;
+            this.Order.OrderHeader.Name = userDto.Name;
+            this.Order.OrderHeader.PhoneNumber = userDto.PhoneNumber;
         }
         IsProcessing = false;
     }

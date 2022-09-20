@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.Web;
 using Tangy.Models;
 using TangyWebClient.Service.IService;
 
@@ -10,6 +11,8 @@ namespace TangyWebClient.Pages.Authentication
         private bool IsProcessing { get; set; } = false;
         public bool ShowLoginErrors { get; set; }
         private string ErrorMessage { get; set; }
+
+        public string ReturnUrl { get; set; }
 
         [Inject]
         public IAuthenticationService authService { get; set; }
@@ -26,7 +29,17 @@ namespace TangyWebClient.Pages.Authentication
 
             if (result.IsAuthSuccessful)
             {
-                this.navManager.NavigateTo("/");
+                var absoluteUrl = new Uri(this.navManager.Uri);
+                var returnUrl = HttpUtility.ParseQueryString(absoluteUrl.Query);
+                this.ReturnUrl = returnUrl["returnUrl"];
+                if (string.IsNullOrEmpty(this.ReturnUrl))
+                {
+                    this.navManager.NavigateTo("/");
+                }
+                else
+                {
+                    this.navManager.NavigateTo("/" + this.ReturnUrl);
+                }
             }
             else
             {

@@ -36,6 +36,8 @@ namespace TangyWebClient.Service
                     await this.localStore.SetItemAsync(SD.Local_Token, responseDto.Token);
                     await this.localStore.SetItemAsync(SD.Local_UserDetails, responseDto.UserDto);
 
+                    ((AuthStateProvider)this.stateProvider).NotifyUserLoggedIn(responseDto.Token);
+
                     // Next statement is needed to set httpClient instance authentication token for other calls:
                     this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", responseDto.Token);
                     return new SignInResponseDto() { IsAuthSuccessful = true, Token = responseDto.Token };
@@ -53,6 +55,7 @@ namespace TangyWebClient.Service
         {
             await this.localStore.RemoveItemAsync(SD.Local_Token);
             await this.localStore.RemoveItemAsync(SD.Local_UserDetails);
+            ((AuthStateProvider)this.stateProvider).NotifyUserLogout();
             this.httpClient.DefaultRequestHeaders.Authorization = null;
         }
 

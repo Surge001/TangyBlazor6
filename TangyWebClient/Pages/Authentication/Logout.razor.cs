@@ -16,7 +16,7 @@ namespace TangyWebClient.Pages.Authentication
         protected override async Task OnInitializedAsync()
         {
             await this.authService.Logout();
-            this.navManager.NavigateTo("/", forceLoad: true);
+            this.navManager.NavigateTo("/");
         }
     }
 }
